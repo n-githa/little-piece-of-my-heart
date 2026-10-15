@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff4f5" />
+  <title>A Little Piece of My Heart 💗</title>
+  <style>
+    :root {
+      --cream: #fff9f2;
+      --blush: #fff0f2;
+      --pink: #f5b9c7;
+      --rose: #d85f7d;
+      --deep: #8f3852;
+      --ink: #573945;
+      --muted: #8c6d77;
+      --white: #ffffff;
+      --shadow: 0 18px 55px rgba(143, 56, 82, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 10% 5%, rgba(245,185,199,.32), transparent 28rem),
+        radial-gradient(circle at 95% 30%, rgba(255,221,215,.5), transparent 25rem),
+        var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    button { font: inherit; }
+    .wrap { width: min(900px, 92%); margin: 0 auto; }
+    header { text-align: center; padding: 38px 0 16px; }
+    .eyebrow {
+      font: 700 .72rem/1.4 Arial, sans-serif;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--rose);
+    }
+    h1 {
+      margin: 12px 0 8px;
+      color: var(--deep);
+      font-size: clamp(2.35rem, 8vw, 4.5rem);
+      line-height: 1.02;
+      font-weight: 500;
+      letter-spacing: -.04em;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      line-height: 1.7;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .tiny-heart { color: var(--rose); display: inline-block; animation: pulse 1.6s infinite; }
+    section { padding: 34px 0; }
+    .section-heading { text-align: center; margin-bottom: 22px; }
+    h2 {
+      font-weight: 500;
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      color: var(--deep);
+      margin: 8px 0;
+    }
+    .section-heading p { color: var(--muted); line-height: 1.6; margin: 0 auto; max-width: 500px; }
+
+    .letter-card {
+      background: rgba(255,255,255,.76);
+      border: 1px solid rgba(216,95,125,.18);
+      border-radius: 28px;
+      padding: clamp(18px, 5vw, 38px);
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .letter-card::before, .letter-card::after {
+      content: "♡"; position: absolute; color: rgba(216,95,125,.18); font-size: 4rem;
+    }
+    .letter-card::before { top: -10px; left: 12px; transform: rotate(-18deg); }
+    .letter-card::after { bottom: -22px; right: 16px; transform: rotate(14deg); }
+    .envelope-stage { min-height: 210px; display: grid; place-items: center; }
+    .envelope {
+      position: relative;
+      width: min(260px, 76vw);
+      height: 158px;
+      border: 0;
+      border-radius: 8px;
+      background: #f4b8c6;
+      box-shadow: 0 12px 24px rgba(143,56,82,.16);
+      cursor: pointer;
+      transition: transform .25s ease;
+      isolation: isolate;
+    }
+    .envelope:hover { transform: translateY(-4px) rotate(-1deg); }
+    .envelope:focus-visible, .btn:focus-visible { outline: 3px solid var(--deep); outline-offset: 4px; }
+    .envelope .flap {
+      position: absolute; inset: 0 0 auto;
+      height: 0; border-left: 130px solid transparent; border-right: 130px solid transparent;
+      border-top: 94px solid #e995aa; transform-origin: top; transition: transform .7s ease; z-index: 4;
+    }
+    .envelope .front {
+      position: absolute; inset: 0;
+      background: linear-gradient(145deg, transparent 49.5%, #f9d4dc 50%) left / 50% 100% no-repeat,
+                  linear-gradient(215deg, transparent 49.5%, #f6c4d0 50%) right / 50% 100% no-repeat;
+      z-index: 3; pointer-events: none;
+    }
+    .envelope .paper {
+      position: absolute; left: 10%; right: 10%; top: 12px; height: 126px;
+      background: #fffaf5; border-radius: 5px; display: grid; place-items: center;
+      color: var(--rose); font-size: 2rem; transition: transform .7s ease; z-index: 2;
+    }
+    .envelope .seal {
+      position: absolute; z-index: 5; left: 50%; top: 58%; transform: translate(-50%,-50%);
+      width: 48px; height: 48px; display: grid; place-items: center;
+      background: var(--rose); color: white; border-radius: 50%; font-size: 1.45rem;
+      box-shadow: 0 4px 12px rgba(143,56,82,.2);
+    }
+    .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
+    .envelope.open .paper { transform: translateY(-80px); }
+    .envelope.open .seal { opacity: 0; transition: opacity .2s; }
+    .tap-note { color: var(--muted); font: .85rem Arial, sans-serif; margin-top: 10px; }
+
+    .letter-text {
+      display: none; text-align: left; max-width: 620px; margin: 18px auto 0;
+      padding: clamp(18px, 4vw, 30px); background: #fffaf7;
+      border: 1px dashed #e9a4b4; border-radius: 18px;
+      font-size: 1.08rem; line-height: 1.9; animation: appear .7s ease both;
+      white-space: pre-line;
+    }
+    .letter-text.visible { display: block; }
+    .letter-text .signoff { color: var(--deep); font-style: italic; font-size: 1.25rem; }
+
+    .reasons-panel {
+      background: rgba(255,255,255,.75); border: 1px solid rgba(216,95,125,.17);
+      border-radius: 26px; padding: clamp(22px, 5vw, 40px); text-align: center; box-shadow: var(--shadow);
+    }
+    .counter { color: var(--rose); font: 700 .78rem Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+    .reason-heart {
+      width: 76px; height: 76px; border-radius: 50%; margin: 20px auto;
+      background: var(--blush); display: grid; place-items: center; font-size: 2.2rem;
+      animation: pulse 1.7s infinite;
+    }
+    #reasonText {
+      min-height: 84px; display: grid; place-items: center; max-width: 570px; margin: 0 auto 22px;
+      color: var(--deep); font-size: clamp(1.35rem, 4vw, 2rem); line-height: 1.45;
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .btn {
+      border: 0; border-radius: 999px; padding: 13px 21px; cursor: pointer;
+      transition: transform .2s, box-shadow .2s; font: 700 .9rem Arial, sans-serif;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--rose); color: white; box-shadow: 0 8px 18px rgba(216,95,125,.2); }
+    .btn-secondary { background: #fff0f2; color: var(--deep); border: 1px solid #f0c4ce; }
+    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    .final-card {
+      text-align: center; padding: clamp(24px, 6vw, 48px); border-radius: 28px;
+      background: linear-gradient(140deg, #fff0f3, #fffaf2); border: 1px solid #f1c4ce;
+      box-shadow: var(--shadow);
+    }
+    .big-heart { font-size: 3.5rem; margin: 5px; animation: pulse 1.6s infinite; }
+    .final-card p { line-height: 1.8; color: var(--muted); max-width: 520px; margin: 12px auto 22px; }
+    .secret-message { display: none; margin: 22px auto 0; max-width: 560px; color: var(--deep); font-size: 1.35rem; line-height: 1.65; animation: appear .6s ease both; }
+    .secret-message.visible { display: block; }
+    footer { text-align: center; padding: 24px 0 42px; color: #a17e88; font: .78rem/1.7 Arial, sans-serif; }
+
+    .floating-heart {
+      position: fixed; bottom: -30px; color: #e98da4; opacity: .62; pointer-events: none;
+      z-index: -1; animation: floatUp linear forwards;
+    }
+    @keyframes floatUp { to { transform: translateY(-115vh) rotate(35deg); opacity: 0; } }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+    @keyframes appear { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <div class="eyebrow">A little something, made with love</div>
+    <h1>A Little Piece<br>of My Heart <span class="tiny-heart">♥</span></h1>
+    <p class="subtitle">For My Baby, Myeni Wami, TR, My Hubby-a little piece of my heart, made just for you. 💗</p>
+  </header>
+
+  <main class="wrap">
+    <section id="letter">
+      <div class="section-heading">
+        <div class="eyebrow">01 · From me to you</div>
+        <h2>A letter for you baby 💌</h2>
+        <p>There's something I want you to read. Tap the envelope, my love.</p>
+      </div>
+      <div class="letter-card">
+        <div class="envelope-stage">
+          <button class="envelope" id="envelope" aria-label="Open your love letter" aria-expanded="false">
+            <span class="paper">♡</span>
+            <span class="flap"></span>
+            <span class="front"></span>
+            <span class="seal">♥</span>
+          </button>
+        </div>
+        <div class="tap-note" id="tapNote">Tap to open your letter</div>
+        <article class="letter-text" id="letterText">
+          <p>To my baby, myeni wami, TR, my hubby, ❤️</p>
+          <p>I wanted to make you something that came from me, not something expensive, just something with a little piece of my heart in it. So, baby, this little corner of the internet is all yours. 🥹</p>
+          <p>I hope you know how special you are to me. I love the thought of getting to know you more, making memories with you, laughing over silly things, and having little moments that become our favourite stories.</p>
+          <p>We still have so many things to experience together, and I hope we get to make those memories one by one. I don't need every moment to be perfect. I just want the real ones, with you.</p>
+          <p>Thank you for being someone I care about so deeply. I hope this little page leaves you smiling and reminds you how loved you are, myeni wami.</p>
+          <p class="signoff">Ngiyakuthanda, Myeni wami. With all my love, your girl. 💗</p>
+          <p><em>P.S. I coded this myself, so you better appreciate your IT girl,asidlali la . 😭❤️</em></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="reasons">
+      <div class="section-heading">
+        <div class="eyebrow">02 · Little things, big feelings</div>
+        <h2>20 reasons I love you</h2>
+        <p>One little reminder at a time. Press the button to reveal the next one. 🥹</p>
+      </div>
+      <div class="reasons-panel">
+        <div class="counter" id="reasonCounter">Reason 1 of 20</div>
+        <div class="reason-heart">💗</div>
+        <div id="reasonText" aria-live="polite">I love you because you are you and there is only one you.</div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="previousReason" disabled>← Previous</button>
+          <button class="btn btn-primary" id="nextReason">Another reason 💕</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="surprise">
+      <div class="section-heading">
+        <div class="eyebrow">03 · One last thing</div>
+        <h2>A tiny surprise ✨</h2>
+      </div>
+      <div class="final-card">
+        <div class="big-heart">💌</div>
+        <h2>Hey, you.</h2>
+        <p>If you've made it this far, here's one last little reminder from the girl who made this page just for you.</p>
+        <button class="btn btn-primary" id="surpriseButton">Open your surprise ❤️</button>
+        <div class="secret-message" id="secretMessage">
+          Baby, I hope we get to do more than just talk about making memories. I hope we get to live them — little dates, silly adventures, long hugs, shared laughs, and moments that belong only to us. Ngiyakuthanda, myeni wami. Here's to the memories still waiting for us. 🥹💗
+          <p><strong>You are loved. Don't ever forget that.</strong></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Made with a little code and a whole lot of love ♥<br>
+    A small reminder that you mean a lot to me.
+  </footer>
+
+  <script>
+    const reasons = [
+      "I love you because you are you — and there is only one you.",
+      "I love the way you can make an ordinary day feel special.",
+      "I love getting to know the little things that make you who you are.",
+      "I love the sound of your voice.",
+      "I love having someone I can share my thoughts with.",
+      "I love the little moments when you make me smile without even trying.",
+      "I love that you have your own way of seeing the world.",
+      "I love the memories we have already started making.",
+      "I love the thought of all the new things we could experience together.",
+      "I love the way my heart feels when I think about you.",
+      "I love your smile.",
+      "I love learning something new about you.",
+      "I love the little things about you that you might not even notice.",
+      "I love that there is still so much of your world for me to discover.",
+      "I love the conversations that make me lose track of time.",
+      "I love imagining our future little adventures.",
+      "I love the comfort of knowing you are part of my life.",
+      "I love the person you are and the person you are becoming.",
+      "I love having someone who inspires me to be thoughtful.",
+      "Most of all, I love you simply because my heart chose you. 💗"
+    ];
+
+    // Envelope: reveal the letter and toggle its open/closed state.
+    const envelope = document.getElementById("envelope");
+    const letterText = document.getElementById("letterText");
+    const tapNote = document.getElementById("tapNote");
+
+    envelope.addEventListener("click", () => {
+      const isOpen = envelope.classList.toggle("open");
+      envelope.setAttribute("aria-expanded", String(isOpen));
+      letterText.classList.toggle("visible", isOpen);
+      tapNote.textContent = isOpen ? "Your letter is open 💗" : "Tap to open your letter";
+      if (isOpen) {
+        setTimeout(() => letterText.scrollIntoView({ behavior: "smooth", block: "nearest" }), 180);
+      }
+    });
+
+    // Reasons carousel.
+    let currentReason = 0;
+    const reasonText = document.getElementById("reasonText");
+    const reasonCounter = document.getElementById("reasonCounter");
+    const previousReason = document.getElementById("previousReason");
+    const nextReason = document.getElementById("nextReason");
+
+    function showReason(index) {
+      currentReason = index;
+      reasonText.textContent = reasons[currentReason];
+      reasonCounter.textContent = `Reason ${currentReason + 1} of ${reasons.length}`;
+      previousReason.disabled = currentReason === 0;
+      nextReason.disabled = currentReason === reasons.length - 1;
+      nextReason.textContent = currentReason === reasons.length - 1 ? "All 20 revealed 💗" : "Another reason 💕";
+    }
+
+    previousReason.addEventListener("click", () => {
+      if (currentReason > 0) showReason(currentReason - 1);
+    });
+    nextReason.addEventListener("click", () => {
+      if (currentReason < reasons.length - 1) showReason(currentReason + 1);
+    });
+
+    // Final surprise.
+    const surpriseButton = document.getElementById("surpriseButton");
+    const secretMessage = document.getElementById("secretMessage");
+    surpriseButton.addEventListener("click", () => {
+      const isVisible = secretMessage.classList.toggle("visible");
+      surpriseButton.textContent = isVisible ? "Close surprise 💗" : "Open your surprise ❤️";
+      if (isVisible) secretMessage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    // Gentle floating hearts. They are decorative and don't block taps.
+    function createHeart() {
+      const heart = document.createElement("span");
+      heart.className = "floating-heart";
+      heart.textContent = Math.random() > 0.5 ? "♡" : "♥";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = (14 + Math.random() * 18) + "px";
+      heart.style.animationDuration = (7 + Math.random() * 6) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 14000);
+    }
+    setInterval(createHeart, 1500);
+  </script>
+</body>
+</html>
